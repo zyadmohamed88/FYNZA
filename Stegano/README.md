@@ -6,8 +6,12 @@
 
 ## 🌟 Key Features
 
-### 1. Advanced Steganography & Cryptography
-* **AES-256-GCM Encryption**: All hidden data is encrypted before being embedded into files, ensuring maximum security and confidentiality.
+### 1. Advanced Cryptography & Steganography
+* **Military-Grade Encryption**: Supports multiple robust encryption algorithms:
+  * **AES-256-GCM** (Authenticated Encryption)
+  * **AES-256-CBC**
+  * **ChaCha20** (High-speed stream cipher)
+* **Advanced Key Derivation**: Uses **PBKDF2** and **scrypt** with dynamic salt and high iterations to protect against brute-force attacks.
 * **Multi-Format Support**:
   * **Images**: Supports LSB (Least Significant Bit), DCT (Discrete Cosine Transform), and SVD (Singular Value Decomposition) algorithms.
   * **Audio**: High-fidelity audio steganography using advanced signal processing.
