@@ -1,0 +1,18 @@
+# Environments
+env/
+env1/
+venv/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models (Optional: Usually we don't upload large files, but 45MB is fine for GitHub. 
+# If they don't want to upload it, they can uncomment the line below)
+# *.pth
+
+# OS Files
+.DS_Store
+Thumbs.db

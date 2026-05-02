@@ -1,0 +1,112 @@
+/* ============================================================
+   features.css — FYNZA Cyber-Security Theme Components
+   Matches style.css SOC Analyst Theme
+   ============================================================ */
+
+/* ── Dropzone Toolbar ─── */
+.dropzone-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.5rem; background-color: var(--bg-card); border: 1px solid var(--border-color);
+    border-top: none; border-radius: 0 0 var(--radius-sm) var(--radius-sm); margin-top: -1.5rem; margin-bottom: 2rem;
+}
+.dz-filename { font-family: var(--font-mono); color: var(--accent-color); font-size: 0.9rem; }
+.reload-btn {
+    background: transparent; border: 1px solid var(--border-color); color: var(--text-main);
+    padding: 0.5rem 1rem; border-radius: var(--radius-sm); cursor: pointer; transition: all var(--transition-fast);
+    font-family: var(--font-mono); font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.reload-btn:hover { border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 10px var(--accent-glow) inset; }
+
+/* ── File Download Card ─────────────────────────── */
+.file-download-card {
+    background-color: var(--bg-main); border: 1px solid var(--accent-color); border-radius: var(--radius-md);
+    padding: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+    position: relative; box-shadow: 0 0 15px var(--accent-glow) inset;
+}
+.file-download-card::before {
+    content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background-color: var(--accent-color);
+}
+.file-download-info { display: flex; align-items: center; gap: 1.5rem; }
+.file-icon { font-size: 2.5rem; color: var(--accent-color); filter: drop-shadow(0 0 8px var(--accent-glow)); }
+.file-name { font-family: var(--font-heading); font-size: 1.2rem; color: var(--text-main); margin-bottom: 0.3rem; }
+.file-size { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.9rem; }
+
+/* ── Advanced Panel ─────── */
+.adv-panel {
+    background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm);
+    margin-top: 2rem; overflow: hidden; transition: all var(--transition-normal);
+}
+.adv-panel summary {
+    padding: 1.2rem 1.5rem; cursor: pointer; font-family: var(--font-heading); font-size: 1rem;
+    color: var(--text-main); list-style: none; display: flex; align-items: center; justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.2); transition: all var(--transition-fast); border-bottom: 1px solid transparent;
+}
+.adv-panel summary:hover { color: var(--accent-color); background-color: rgba(0, 255, 204, 0.05); }
+.adv-panel summary::after { content: '▼'; font-size: 0.8rem; color: var(--accent-color); transition: transform var(--transition-fast); }
+.adv-panel[open] summary { border-bottom-color: var(--border-color); color: var(--accent-color); }
+.adv-panel[open] summary::after { transform: rotate(180deg); }
+.adv-panel-content { padding: 2rem; }
+
+/* ── Pills & Toggles ──────────────────────── */
+.pill-row { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 1rem; }
+.feature-pill {
+    background-color: rgba(0, 255, 204, 0.1); border: 1px solid var(--accent-glow);
+    color: var(--accent-color); padding: 0.3rem 1rem; border-radius: 50px; font-family: var(--font-mono); font-size: 0.85rem;
+}
+
+.toggle-row { display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+.toggle-item { display: flex; align-items: center; gap: 0.8rem; font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-main); cursor: pointer; }
+.toggle-item input[type="checkbox"] { accent-color: var(--accent-color); width: 16px; height: 16px; }
+
+/* ── Stats Group ──────────────── */
+.stat-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+.stat-box { background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.5rem; text-align: center; }
+.stat-box-val { font-family: var(--font-mono); font-size: 1.5rem; color: var(--accent-color); margin-bottom: 0.5rem; text-shadow: 0 0 8px var(--accent-glow); }
+.stat-box-lbl { font-family: var(--font-heading); font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; }
+
+/* ── Gauges ───────────────────────────────── */
+.gauge-section { margin-bottom: 2rem; }
+.gauge-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.8rem; }
+.gauge-title { font-family: var(--font-heading); font-size: 0.95rem; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; }
+.gauge-value { font-family: var(--font-mono); font-size: 1.5rem; color: var(--accent-color); }
+.gauge-bar-bg { height: 6px; background-color: var(--bg-card); border-radius: 3px; overflow: hidden; border: 1px solid var(--border-color); }
+.gauge-bar { height: 100%; background-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-glow); border-radius: 3px; transition: width 1s ease-in-out; }
+.gauge-sublabel { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); margin-top: 0.8rem; }
+
+/* ── Detection Cards ──────────────────────── */
+.detect-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+.detect-card { background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.5rem; text-align: center; }
+.detect-val { font-family: var(--font-mono); font-size: 1.8rem; color: var(--accent-color); margin-bottom: 0.5rem; text-shadow: 0 0 10px var(--accent-glow); }
+.detect-lbl { font-family: var(--font-heading); font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; }
+
+/* ── Explanation Timeline ─────────────────── */
+.explain-section { background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 2rem; margin-top: 2rem; }
+.explain-title { font-family: var(--font-heading); font-size: 1.1rem; color: var(--accent-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+.explain-list { display: flex; flex-direction: column; gap: 2rem; position: relative; }
+.explain-list::before { content: ''; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background-color: var(--border-color); }
+.explain-step { display: flex; gap: 1.5rem; position: relative; z-index: 1; }
+.explain-num {
+    width: 34px; height: 34px; border-radius: 50%; background-color: var(--bg-main); border: 2px solid var(--accent-color);
+    display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-color); flex-shrink: 0; box-shadow: 0 0 10px var(--accent-glow);
+}
+.explain-text { display: flex; flex-direction: column; padding-top: 0.3rem; }
+.explain-text strong { font-family: var(--font-heading); font-size: 1rem; color: var(--text-main); margin-bottom: 0.4rem; }
+.explain-text span { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+
+/* ── Meta Rows ───────────── */
+.meta-rows { background-color: var(--bg-card); border-radius: var(--radius-sm); padding: 1.5rem; border: 1px solid var(--border-color); margin-bottom: 1.5rem; }
+.info-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px dashed var(--border-color); }
+.info-row:last-child { border-bottom: none; padding-bottom: 0; }
+.info-key { font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted); }
+.info-val { font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-color); font-weight: bold; text-align: right; max-width: 60%; word-break: break-all; text-shadow: 0 0 5px var(--accent-glow); }
+.info-val.warn { color: var(--warning); text-shadow: none; }
+.info-val.bad { color: var(--error); text-shadow: none; }
+
+/* ── Payload Segment Switcher ─────────────── */
+.type-segment { display: flex; background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.4rem; margin-bottom: 1.5rem; gap: 0.4rem; }
+.type-btn {
+    flex: 1; background: transparent; border: none; padding: 0.8rem; font-family: var(--font-heading); font-size: 0.95rem;
+    color: var(--text-muted); cursor: pointer; border-radius: 4px; transition: all var(--transition-fast);
+}
+.type-btn.active { background-color: rgba(0, 255, 204, 0.1); color: var(--accent-color); border: 1px solid var(--accent-glow); }
+.type-btn:not(.active):hover { color: var(--text-main); }

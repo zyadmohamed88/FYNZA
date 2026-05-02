@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FYNZA — Secure Steganography Suite</title>
+  <meta name="description" content="Enterprise steganography: AES-256-GCM, ChaCha20, Scrypt, WAV & Image carriers." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=15" />
+  <link rel="stylesheet" href="features.css?v=15" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+  <!-- Global Animated Background -->
+  <div class="global-bg-blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+  </div>
+  
+  <!-- Cyber Particles & Scanline -->
+  <div class="cyber-particles">
+      <div class="particle p-1"></div>
+      <div class="particle p-2"></div>
+      <div class="particle p-3"></div>
+      <div class="particle p-4"></div>
+      <div class="particle p-5"></div>
+      <div class="particle p-6"></div>
+      <div class="particle p-7"></div>
+      <div class="particle p-8"></div>
+  </div>
+  <div class="scanlines"></div>
+
+  <!-- THEME TOGGLE (Floating) -->
+  <button class="theme-toggle" id="theme-toggle" title="Toggle theme" style="position:fixed; top:20px; right:30px; z-index:1001; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-main); font-size:1.2rem; width:45px; height:45px; border-radius:50%; cursor:pointer; box-shadow:0 0 10px var(--accent-glow); display:flex; align-items:center; justify-content:center; transition:var(--transition-normal);"><i class="fa-solid fa-circle-half-stroke"></i></button>
+
+  <!-- HERO (Logo Only) -->
+  <header class="hero" style="min-height: 50vh; display: flex; align-items: center; justify-content: center; flex-direction: column; padding-top: 60px;">
+    <div class="hero-glow glow-left"></div>
+    <div class="hero-glow glow-right"></div>
+    <div class="hero-content" style="text-align: center;">
+      <h1 class="hero-title gradient-text" style="font-size: clamp(80px, 12vw, 140px); letter-spacing: 8px; text-shadow: 0 0 40px var(--accent-glow); margin-bottom: 10px; font-weight: 800;">FYNZA</h1>
+      <p class="hero-subtitle" style="color:var(--text-main); font-family:var(--font-mono); font-weight:600; letter-spacing: 3px; font-size:1rem; opacity:0.8;">YOUR SECURITY IS MY PRIORITY</p>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- TABS -->
+    <div class="tab-switcher">
+      <button class="tab-btn active" id="tab-hide-btn"><i class="fa-solid fa-lock"></i> Hide Payload</button>
+      <button class="tab-btn" id="tab-extract-btn"><i class="fa-solid fa-unlock"></i> Extract Payload</button>
+      <button class="tab-btn" id="tab-detect-btn"><i class="fa-solid fa-radar"></i> Detect</button>
+      <button class="tab-btn" id="tab-forensics-btn" style="position:relative;"><i class="fa-solid fa-microscope"></i> Forensics<span class="hm-tab-badge" id="forensics-badge" hidden></span></button>
+      <button class="tab-btn" id="tab-logs-btn"><i class="fa-solid fa-terminal"></i> Logs &amp; Status</button>
+    </div>
+
+    <!-- ═══════ HIDE ═══════ -->
+    <section class="panel" id="hide-panel">
+      <div class="panel-grid">
+        <div class="panel-col">
+
+          <div class="section-header">
+            <div class="section-icon"><i class="fa-regular fa-image"></i></div>
+            <div>
+              <h2 class="section-title">Carrier Media</h2>
+              <p class="section-sub">Any file format supported — PNG, WAV, PDF, ZIP, etc.</p>
+            </div>
+          </div>
+
+          <div class="dropzone" id="hide-dropzone">
+            <div class="drop-idle" id="hide-drop-idle">
+              <div class="drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <p class="drop-title">Drag &amp; drop a file here</p>
+              <p class="drop-sub">or click to browse</p>
+              <span class="drop-hint">ANY FILE FORMAT</span>
+            </div>
+            <img class="drop-preview" id="hide-preview" alt="Preview" />
+            <input type="file" id="hide-file-input" hidden />
+          </div>
+          <div class="dropzone-toolbar" id="hide-toolbar" style="display:none;">
+            <span class="dz-filename" id="hide-filename"></span>
+            <button class="reload-btn" id="hide-reload-btn" title="Change file"><i class="fa-solid fa-rotate-left"></i> Change File</button>
+          </div>
+
+          <div class="info-dashboard" id="carrier-info" style="display:none;margin-bottom:16px;">
+            <h4>Carrier Information</h4>
+            <div id="carrier-info-rows"></div>
+          </div>
+          <div class="cap-warning" id="cap-warning"></div>
+
+          <!-- Payload type -->
+          <div class="field-group" style="margin-top:20px;">
+            <label class="field-label">Secret Payload</label>
+            <div class="tab-switcher" style="margin-bottom:10px;width:100%;">
+              <button class="tab-btn active" id="type-text-btn" type="button"
+                style="padding:8px 16px;font-size:13px;">Text Message</button>
+              <button class="tab-btn" id="type-file-btn" type="button" style="padding:8px 16px;font-size:13px;">Any
+                File</button>
+            </div>
+            <textarea class="field-textarea" id="hide-message" placeholder="Type your secret message here…"
+              rows="4"></textarea>
+            <div class="char-count" id="char-count">0 characters</div>
+            <div class="dropzone" id="secret-dropzone"
+              style="display:none;min-height:80px;border-style:dashed;cursor:pointer;">
+              <div class="drop-idle" style="pointer-events:none;">
+                <p class="drop-title" style="font-size:13px;">Click to choose any file to hide</p>
+                <p id="secret-file-name" style="font-size:11.5px;color:var(--accent-light);margin-top:6px;"></p>
+              </div>
+              <input type="file" id="secret-file-input" hidden />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="field-group">
+            <label class="field-label" for="hide-password">Encryption Password</label>
+            <div class="password-wrap">
+              <input type="password" class="field-input" id="hide-password" placeholder="Enter a strong password…" />
+              <button class="pwd-toggle" id="hide-pwd-toggle" type="button"><i class="fa-regular fa-eye"></i></button>
+            </div>
+            <div class="strength-bar-wrap">
+              <div class="strength-bar" id="hide-strength-bar"></div>
+            </div>
+            <span class="strength-label" id="strength-label">Password strength indicator</span>
+          </div>
+
+          <!-- Steganography & Encryption -->
+          <details class="adv-panel" open>
+            <summary><span class="chevron"><i class="fa-solid fa-play"></i></span> Steganography &amp; Encryption</summary>
+            <div class="settings-grid">
+              <div class="field-group">
+                <label class="field-label">Embedding Mode</label>
+                <select class="field-input" id="hide-algorithm">
+                  <option value="camouflage_lsb">Camouflage LSB — Noise Injection</option>
+                  <option value="adaptive_edge">Adaptive Scatter — Pseudo-Random</option>
+                  <option value="dct">DCT Transform — Frequency Domain</option>
+                  <option value="dwt">DWT Transform — Wavelet Domain</option>
+                  <option value="svd">SVD Transform — Singular Value</option>
+                  <option value="lbb">LBB Transform — Local Binary Block</option>
+                  <option value="overlay_add">Overlay (Add) — Robust Watermark</option>
+                  <option value="overlay_alpha">Overlay (Alpha) — Transparency</option>
+                  <option value="overlay_mul">Overlay (Mul) — Multiplicative</option>
+                  <option value="lsb_basic">Basic LSB — Maximum Capacity</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Encryption Cipher</label>
+                <select class="field-input" id="hide-encryption">
+                  <option value="aes_gcm">AES-256-GCM (Authenticated)</option>
+                  <option value="chacha20">ChaCha20 (Stream Cipher)</option>
+                  <option value="aes_cbc">AES-256-CBC (Legacy)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Key Derivation — KDF</label>
+                <select class="field-input" id="hide-kdf">
+                  <option value="scrypt">Scrypt — Memory-Hard</option>
+                  <option value="pbkdf2">PBKDF2-SHA256</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">KDF Iterations</label>
+                <select class="field-input" id="hide-iterations">
+                  <option value="100000">100,000 — Fast</option>
+                  <option value="500000">500,000 — Secure</option>
+                  <option value="1000000">1,000,000 — Paranoid</option>
+                </select>
+              </div>
+              <div class="field-group" style="grid-column:span 2;">
+                <label class="field-label">ZLIB Compression Level — <span id="comp-lvl-val">9</span></label>
+                <input type="range" id="hide-compression" min="0" max="9" value="9"
+                  style="width:100%;accent-color:var(--accent);margin-top:4px;" />
+                <div
+                  style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:4px;">
+                  <span>0 — None</span><span>5 — Balanced</span><span>9 — Maximum</span>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Password Hints -->
+          <details class="adv-panel">
+            <summary><span class="chevron"><i class="fa-solid fa-play"></i></span> Password Hint &amp; Recovery (Optional)</summary>
+            <div class="settings-grid" style="margin-top:14px;">
+              <div class="field-group" style="grid-column:span 2;">
+                <label class="field-label">Password Hint (stored inside carrier)</label>
+                <input type="text" class="field-input" id="hint-field"
+                  placeholder="e.g. The name of my favourite book…" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Security Question</label>
+                <input type="text" class="field-input" id="question-field" placeholder="e.g. First pet's name?" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Answer (stored as SHA-256 hash)</label>
+                <input type="text" class="field-input" id="answer-field" placeholder="Your answer" />
+              </div>
+            </div>
+          </details>
+
+          <div class="toggle-row">
+            <label class="toggle-item"><input type="checkbox" id="explain-mode-hide" /> Explain Mode</label>
+            <label class="toggle-item"><input type="checkbox" id="auto-cap-check" checked /> Auto Capacity Check</label>
+          </div>
+
+          <button class="action-btn" id="hide-btn" style="margin-top:20px;">
+            <span class="btn-text"><i class="fa-solid fa-shield-halved"></i> Encrypt &amp; Hide Payload</span>
+            <span class="btn-spinner" id="hide-spinner" hidden></span>
+          </button>
+          <div class="alert" id="hide-alert" hidden></div>
+        </div>
+
+        <!-- Results col -->
+        <div class="panel-col result-col">
+          <div class="placeholder-card" id="hide-placeholder">
+            <div class="placeholder-icon"><i class="fa-solid fa-shield-virus"></i></div>
+            <p class="placeholder-text">Security Dashboard</p>
+            <p class="placeholder-sub">Upload a carrier and hide a payload to view security metrics, heatmap, and
+              detailed report.</p>
+            <div class="pill-row">
+              <span class="feature-pill">AES-256-GCM</span>
+              <span class="feature-pill">ChaCha20</span>
+              <span class="feature-pill">Scrypt</span>
+              <span class="feature-pill">ZLIB</span>
+              <span class="feature-pill">Heatmap</span>
+              <span class="feature-pill">PSNR</span>
+              <span class="feature-pill">WAV Audio</span>
+            </div>
+          </div>
+
+          <div class="result-card" id="hide-result" hidden>
+            <div class="result-header">
+              <span class="result-badge success">Payload Hidden</span>
+              <span class="result-psnr" id="hide-psnr-label"></span>
+            </div>
+
+            <div class="gauge-section">
+              <div class="gauge-header">
+                <span class="gauge-title">Security Score</span>
+                <span class="gauge-value gradient-text" id="score-val"></span>
+              </div>
+              <div class="gauge-bar-bg">
+                <div class="gauge-bar" id="score-bar"></div>
+              </div>
+              <div class="gauge-sublabel">Risk Level: <strong id="risk-val"></strong></div>
+            </div>
+
+            <div class="gauge-section">
+              <div class="gauge-header">
+                <span class="gauge-title">Carrier Capacity Used</span>
+                <span class="gauge-value" id="capacity-pct-val"
+                  style="font-size:16px;color:var(--text-primary);font-family:var(--font-mono);"></span>
+              </div>
+              <div class="gauge-bar-bg">
+                <div class="gauge-bar" id="capacity-bar" style="background:var(--accent);"></div>
+              </div>
+            </div>
+
+            <div class="stat-group" id="stat-group"></div>
+
+            <div class="info-dashboard">
+              <h4>Operation Metadata</h4>
+              <div id="result-meta-rows"></div>
+            </div>
+
+            <!-- Image output -->
+            <div id="image-previews-wrap" class="image-previews" style="display:none;">
+              <div>
+                <p class="preview-label">Stego Image</p>
+                <img class="result-preview" id="hide-result-img" alt="Stego" />
+                <div style="display:flex;gap:8px;margin-top:10px;">
+                  <a class="download-btn" id="hide-download-png" download="fynza_stego.png">Download PNG</a>
+                  <a class="download-btn" id="hide-download-jpg"
+                    style="background:rgba(6,182,212,0.08);color:var(--cyan);border-color:rgba(6,182,212,0.25);"
+                    download="fynza_stego.jpg">Download JPG</a>
+                </div>
+              </div>
+              <div>
+                <img class="result-preview heatmap" id="hide-heatmap-img" alt="Heatmap" />
+              </div>
+            </div>
+
+              <!-- shortcut to forensics tab -->
+              <div id="hm-shortcut" hidden style="margin-top:1.5rem;">
+                <button class="export-btn" id="hm-goto-btn" style="width:100%;justify-content:center;gap:0.6rem;"><i class="fa-solid fa-microscope"></i> Open Forensic Heatmap Analysis</button>
+              </div>
+
+            <!-- Audio output -->
+            <div id="audio-result-wrap" style="display:none;">
+              <p class="preview-label" style="margin-bottom:10px;">Stego Audio — WAV</p>
+              <audio id="stego-audio-player" controls style="width:100%;border-radius:var(--radius-md);"></audio>
+              <a class="download-btn" id="hide-download-wav" style="margin-top:10px;display:inline-flex;"
+                download="fynza_stego.wav">⬇ Download Stego WAV</a>
+            </div>
+
+            <!-- Generic File output -->
+            <div id="generic-result-wrap" style="display:none;">
+              <p class="preview-label" style="margin-bottom:10px;">Stego File</p>
+              <div class="file-download-card">
+                <div class="file-download-info">
+                  <div class="file-icon"><i class="fa-solid fa-folder-open"></i></div>
+                  <div>
+                    <div class="file-name" id="generic-filename-lbl">—</div>
+                    <div class="file-size">Carrier with hidden data inside</div>
+                  </div>
+                </div>
+                <a class="file-download-btn" id="hide-download-generic" download>⬇ Download File</a>
+              </div>
+            </div>
+
+            <!-- Export -->
+            <div class="export-bar">
+              <button class="export-btn" id="export-json-btn">JSON Report</button>
+              <button class="export-btn" id="export-csv-btn">CSV Report</button>
+              <button class="export-btn" id="export-html-btn">HTML Report</button>
+            </div>
+
+            <div class="explain-box" id="explain-section" hidden>
+              <h4>Step-by-Step Explanation</h4>
+              <div id="explain-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ EXTRACT ═══════ -->
+    <section class="panel" id="extract-panel" hidden>
+      <div class="panel-grid">
+        <div class="panel-col">
+          <div class="section-header">
+            <div class="section-icon"><i class="fa-solid fa-unlock"></i></div>
+            <div>
+              <h2 class="section-title">Extract Hidden Payload</h2>
+              <p class="section-sub">Supports any stego file — settings must match Hide exactly</p>
+            </div>
+          </div>
+
+          <div class="dropzone" id="extract-dropzone">
+            <div class="drop-idle" id="extract-drop-idle">
+              <div class="drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <p class="drop-title">Drop any stego file here</p>
+              <span class="drop-hint">ANY FILE FORMAT</span>
+            </div>
+            <img class="drop-preview" id="extract-preview" alt="Stego preview" />
+            <input type="file" id="extract-file-input" hidden />
+          </div>
+          <div class="dropzone-toolbar" id="extract-toolbar" style="display:none;">
+            <span class="dz-filename" id="extract-filename"></span>
+            <button class="reload-btn" id="extract-reload-btn" title="Change file"><i class="fa-solid fa-rotate-left"></i> Change File</button>
+          </div>
+
+          <div class="field-group" style="margin-top:16px;">
+            <label class="field-label" for="extract-password">Decryption Password</label>
+            <div class="password-wrap">
+              <input type="password" class="field-input" id="extract-password"
+                placeholder="Password used during hiding…" />
+              <button class="pwd-toggle" id="extract-pwd-toggle" type="button"><i class="fa-regular fa-eye"></i></button>
+            </div>
+          </div>
+
+          <details class="adv-panel" open>
+            <summary><span class="chevron"><i class="fa-solid fa-play"></i></span> Decryption Settings — must match Hide settings exactly</summary>
+            <div class="settings-grid" style="margin-top:14px;">
+              <div class="field-group">
+                <label class="field-label">Embedding Mode</label>
+                <select class="field-input" id="extract-algorithm">
+                  <option value="camouflage_lsb">Camouflage LSB</option>
+                  <option value="adaptive_edge">Adaptive Scatter</option>
+                  <option value="dct">DCT Transform</option>
+                  <option value="dwt">DWT Transform</option>
+                  <option value="svd">SVD Transform</option>
+                  <option value="lbb">LBB Transform</option>
+                  <option value="overlay_add">Overlay (Add)</option>
+                  <option value="overlay_alpha">Overlay (Alpha)</option>
+                  <option value="overlay_mul">Overlay (Mul)</option>
+                  <option value="lsb_basic">Basic LSB</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Cipher</label>
+                <select class="field-input" disabled>
+                  <option>Auto-Detected from Header</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Key Derivation — KDF</label>
+                <select class="field-input" id="extract-kdf">
+                  <option value="scrypt">Scrypt — Memory-Hard</option>
+                  <option value="pbkdf2">PBKDF2-SHA256</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">KDF Iterations</label>
+                <select class="field-input" id="extract-iterations">
+                  <option value="100000">100,000</option>
+                  <option value="500000">500,000</option>
+                  <option value="1000000">1,000,000</option>
+                </select>
+              </div>
+              <div class="field-group" style="grid-column:span 2;">
+                <label class="field-label">ZLIB Compression</label>
+                <input class="field-input" type="text" value="Auto-Detected and Decompressed" disabled />
+              </div>
+            </div>
+          </details>
+
+          <div class="toggle-row">
+            <label class="toggle-item"><input type="checkbox" id="explain-mode-extract" /> Explain Mode</label>
+          </div>
+
+          <button class="action-btn" id="extract-btn" style="margin-top:20px;">
+            <span class="btn-text"><i class="fa-solid fa-unlock-keyhole"></i> Decrypt &amp; Extract Payload</span>
+            <span class="btn-spinner" id="extract-spinner" hidden></span>
+          </button>
+          <div class="alert" id="extract-alert" hidden></div>
+        </div>
+
+        <div class="panel-col result-col">
+          <div class="placeholder-card" id="extract-placeholder">
+            <div class="placeholder-icon">◫</div>
+            <p class="placeholder-text">Extracted payload appears here</p>
+            <p class="placeholder-sub">Upload a stego image or WAV and enter the correct password and matching settings.
+            </p>
+          </div>
+          <div class="result-card" id="extract-result" hidden>
+            <div class="result-header">
+              <span class="result-badge success">Decrypted Successfully</span>
+              <span id="extract-timing" class="result-psnr"></span>
+            </div>
+            <div class="hint-box" id="hint-box" hidden></div>
+            <div class="info-dashboard" id="extract-meta" style="margin-bottom:4px;">
+              <h4>Extraction Metadata</h4>
+              <div id="extract-meta-rows"></div>
+            </div>
+            <div class="message-box" id="extract-message-box"></div>
+            <!-- File download card (shown only when payload is a file) -->
+            <div class="file-download-card" id="file-download-card" style="display:none;">
+              <div class="file-download-info">
+                <div class="file-icon"><i class="fa-solid fa-file"></i></div>
+                <div>
+                  <div class="file-name" id="dl-filename">—</div>
+                  <div class="file-size" id="dl-filesize">—</div>
+                </div>
+              </div>
+              <a class="file-download-btn" id="dl-btn" download>⬇ Download File</a>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="copy-btn" id="copy-btn">Copy to Clipboard</button>
+              <button class="export-btn" id="extract-report-btn">Export Report</button>
+            </div>
+            <div class="explain-box" id="extract-explain-section" hidden>
+              <h4>Step-by-Step Explanation</h4>
+              <div id="extract-explain-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ DETECT ═══════ -->
+    <section class="panel" id="detect-panel" hidden>
+      <div class="panel-grid">
+        <div class="panel-col">
+          <div class="section-header">
+            <div class="section-icon"><i class="fa-solid fa-brain"></i></div>
+            <div>
+              <h2 class="section-title">AI Steganalysis</h2>
+              <p class="section-sub">DL model powerful in detect steganography!</p>
+            </div>
+          </div>
+          <div class="dropzone" id="detect-dropzone">
+            <div class="drop-idle" id="detect-drop-idle">
+              <div class="drop-icon"><i class="fa-regular fa-image"></i></div>
+              <p class="drop-title">Select an image for AI inspection</p>
+            </div>
+            <img class="drop-preview" id="detect-preview" alt="Detect" />
+            <input type="file" id="detect-file-input" hidden />
+          </div>
+          <div class="dropzone-toolbar" id="detect-toolbar" style="display:none;">
+            <span class="dz-filename" id="detect-filename"></span>
+            <button class="reload-btn" id="detect-reload-btn" title="Change file"><i class="fa-solid fa-rotate-left"></i> Change File</button>
+          </div>
+          <button class="action-btn" id="detect-btn" style="margin-top:16px; background: linear-gradient(135deg, #7c3aed, #9f5fff); border: none; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+            <span class="btn-text"><i class="fa-solid fa-robot"></i> Check RESNET18 Model for Stegano OR not!</span>
+            <span class="btn-spinner" id="detect-spinner" hidden></span>
+          </button>
+          <div class="alert" id="detect-alert" hidden></div>
+        </div>
+        <div class="panel-col result-col">
+          <div class="placeholder-card" id="detect-placeholder">
+            <div class="placeholder-icon"><i class="fa-solid fa-user-secret"></i></div>
+            <p class="placeholder-text">Detection Results</p>
+            <p class="placeholder-sub">The AI model will analyze the pixel patterns to identify potential steganography methods.</p>
+          </div>
+          <div class="result-card" id="detect-result" hidden>
+            <div class="result-header" style="margin-bottom: 20px;">
+              <span class="result-badge" id="detect-badge">Analysis Complete</span>
+            </div>
+            
+            <div class="ai-output-box" style="background: var(--bg-hover); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px;">
+              <h3 style="margin-bottom: 15px; color: var(--text-main); font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-robot"></i> AI Steganalysis Output
+              </h3>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div style="background: var(--bg-body); padding: 12px; border-radius: var(--radius-sm); border-left: 3px solid var(--accent); position: relative;">
+                  <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; font-family: var(--font-mono); display: flex; align-items: center; gap: 5px;">
+                    <i class="fa-solid fa-eye"></i> Detection
+                  </div>
+                  <div id="ai-stego-val" style="font-size: 1.2rem; font-weight: 600; color: var(--text-main);">—</div>
+                </div>
+                
+                <div style="background: var(--bg-body); padding: 12px; border-radius: var(--radius-sm); border-left: 3px solid var(--cyan); position: relative;">
+                  <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; font-family: var(--font-mono); display: flex; align-items: center; gap: 5px;">
+                    <i class="fa-solid fa-toolbox"></i> Method
+                  </div>
+                  <div id="ai-method-val" style="font-size: 1.2rem; font-weight: 600; color: var(--text-main);">—</div>
+                </div>
+              </div>
+              
+              <div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                  <span style="font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono);">Confidence Level</span>
+                  <span id="ai-confidence-val" style="font-size: 0.9rem; font-weight: 600; font-family: var(--font-mono);">—</span>
+                </div>
+                <div style="width: 100%; height: 8px; background: var(--bg-body); border-radius: 4px; overflow: hidden;">
+                  <div id="ai-confidence-bar" style="height: 100%; background: var(--accent); width: 0%; transition: width 0.5s ease;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Legacy Statistical Analysis (collapsed by default) -->
+            <details class="adv-panel" style="margin-top: 10px;">
+              <summary><span class="chevron"><i class="fa-solid fa-play"></i></span> View Legacy Statistical Analysis</summary>
+              <div style="padding-top: 15px;">
+                <div class="gauge-section" style="margin-bottom: 15px;">
+                  <div class="gauge-header">
+                    <span class="gauge-title">Statistical Suspicion Score</span>
+                    <span class="gauge-value" id="detect-score-val"></span>
+                  </div>
+                  <div class="gauge-bar-bg">
+                    <div class="gauge-bar" id="detect-score-bar"></div>
+                  </div>
+                </div>
+                <div class="detect-grid" id="detect-grid"></div>
+                <div class="info-dashboard" style="margin-top:15px;">
+                  <h4>LSB Distribution Analysis</h4>
+                  <div id="detect-meta-rows"></div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ FORENSICS ═══════ -->
+    <section class="panel" id="forensics-panel" hidden>
+      <div class="section-header" style="margin-bottom:2rem;">
+        <div class="section-icon"><i class="fa-solid fa-microscope"></i></div>
+        <div>
+          <h2 class="section-title">Forensic Heatmap Analysis</h2>
+          <p class="section-sub">Multi-layer LSB modification visualization &amp; pixel inspector</p>
+        </div>
+      </div>
+
+      <div id="hm-viewer" class="hm-viewer">
+        <!-- Layer + View Controls -->
+        <div class="hm-header">
+          <div class="hm-title"><i class="fa-solid fa-layer-group"></i> Layer</div>
+          <div class="hm-layer-tabs">
+            <button class="hm-tab active" data-layer="composite">Composite</button>
+            <button class="hm-tab" data-layer="change_map">Change Map</button>
+            <button class="hm-tab" data-layer="intensity">Intensity</button>
+            <button class="hm-tab" data-layer="density">Density</button>
+            <button class="hm-tab" data-layer="risk">Risk</button>
+          </div>
+          <div class="hm-view-tabs">
+            <button class="hm-view-btn active" data-view="heatmap"><i class="fa-solid fa-eye"></i> Heatmap</button>
+            <button class="hm-view-btn" data-view="compare"><i class="fa-solid fa-code-compare"></i> Compare</button>
+          </div>
+        </div>
+
+        <!-- Canvas area -->
+        <div class="hm-canvas-wrap" id="hm-canvas-wrap">
+          <!-- Heatmap view -->
+          <div id="hm-view-heatmap" class="hm-view-panel">
+            <div class="hm-img-wrap" id="hm-img-wrap">
+              <img id="hm-active-img" class="hm-img" alt="heatmap" />
+              <div class="hm-crosshair" id="hm-crosshair"></div>
+            </div>
+          </div>
+          <!-- Compare slider (clip-path approach) -->
+          <div id="hm-view-compare" class="hm-view-panel" style="display:none;">
+            <div class="hm-compare" id="hm-compare">
+              <img id="hm-cmp-stego"    class="hm-cmp-base" alt="stego (modified)" />
+              <img id="hm-cmp-original" class="hm-cmp-top"  alt="original" />
+              <div class="hm-cmp-divider" id="hm-cmp-divider"></div>
+              <div class="hm-cmp-handle"  id="hm-cmp-handle">
+                <div class="hm-cmp-arrows">&#8249;&#8250;</div>
+              </div>
+              <div class="hm-cmp-label hm-cmp-label-l">ORIGINAL</div>
+              <div class="hm-cmp-label hm-cmp-label-r">STEGO</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zoom + Export bar -->
+        <div class="hm-zoom-bar">
+          <button class="hm-zoom-btn" id="hm-zoom-out"><i class="fa-solid fa-minus"></i></button>
+          <span class="hm-zoom-label" id="hm-zoom-label">100%</span>
+          <button class="hm-zoom-btn" id="hm-zoom-in"><i class="fa-solid fa-plus"></i></button>
+          <button class="hm-zoom-btn" id="hm-zoom-fit" title="Reset zoom"><i class="fa-solid fa-expand"></i></button>
+          <button class="hm-export-btn" id="hm-export-btn"><i class="fa-solid fa-download"></i> Export Layer</button>
+        </div>
+
+        <!-- Pixel Inspector -->
+        <div class="hm-inspector" id="hm-inspector" hidden>
+          <div class="hm-inspector-title"><i class="fa-solid fa-crosshairs"></i> Pixel Inspector — hover over image</div>
+          <div class="hm-inspector-body" id="hm-inspector-body"></div>
+        </div>
+
+        <!-- Stats grid -->
+        <div class="hm-stats-grid">
+          <div class="hm-stat-card">
+            <div class="hm-stat-val" id="hm-modified">—</div>
+            <div class="hm-stat-lbl">Modified Pixels</div>
+          </div>
+          <div class="hm-stat-card">
+            <div class="hm-stat-val" id="hm-affected">—</div>
+            <div class="hm-stat-lbl">Area Affected</div>
+          </div>
+          <div class="hm-stat-card">
+            <div class="hm-stat-val" id="hm-pattern">—</div>
+            <div class="hm-stat-lbl">Embed Pattern</div>
+          </div>
+          <div class="hm-stat-card">
+            <div class="hm-stat-val" id="hm-bit-ratio">—</div>
+            <div class="hm-stat-lbl">LSB Ones Ratio</div>
+          </div>
+        </div>
+
+        <!-- Channel + Risk breakdown -->
+        <div class="hm-breakdown">
+          <div class="hm-breakdown-col">
+            <div class="hm-breakdown-title"><i class="fa-solid fa-palette"></i> Channel Analysis</div>
+            <div class="hm-ch-row"><span class="hm-ch-dot" style="background:#ef4444;"></span><span>Red</span><span id="hm-ch-r">—</span></div>
+            <div class="hm-ch-row"><span class="hm-ch-dot" style="background:#22c55e;"></span><span>Green</span><span id="hm-ch-g">—</span></div>
+            <div class="hm-ch-row"><span class="hm-ch-dot" style="background:#3b82f6;"></span><span>Blue</span><span id="hm-ch-b">—</span></div>
+          </div>
+          <div class="hm-breakdown-col">
+            <div class="hm-breakdown-title"><i class="fa-solid fa-shield-halved"></i> Risk Zones</div>
+            <div class="hm-ch-row"><span class="hm-ch-dot" style="background:#22c55e;"></span><span>Safe</span><span id="hm-risk-safe">—</span></div>
+            <div class="hm-ch-row"><span class="hm-ch-dot" style="background:#f59e0b;"></span><span>Medium</span><span id="hm-risk-med">—</span></div>
+            <div class="hm-ch-row"><span class="hm-ch-dot" style="background:#ef4444;"></span><span>Risky</span><span id="hm-risk-risky">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- placeholder when no data yet -->
+      <div id="hm-placeholder" style="text-align:center;padding:4rem 2rem;color:var(--text-muted);font-family:var(--font-mono);font-size:0.9rem;">
+        <i class="fa-solid fa-microscope" style="font-size:2.5rem;opacity:0.3;display:block;margin-bottom:1rem;"></i>
+        Run a Hide Image operation to generate forensic analysis
+      </div>
+    </section>
+
+    <!-- ═══════ LOGS &amp; STATUS (Unified) ═══════ -->
+    <section class="panel" id="logs-panel" hidden>
+
+      <!-- Header -->
+      <div class="section-header" style="margin-bottom: 2rem;">
+        <div class="section-icon"><i class="fa-solid fa-terminal"></i></div>
+        <div>
+          <h2 class="section-title">Logs &amp; Status</h2>
+          <p class="section-sub">Live backend metrics &amp; local audit trail</p>
+        </div>
+      </div>
+
+      <!-- ── Live Stats Row ── -->
+      <div class="logs-stats-row">
+        <div class="log-stat-card">
+          <div class="log-stat-icon"><i class="fa-solid fa-lock"></i></div>
+          <div class="log-stat-val" id="stat-hide">—</div>
+          <div class="log-stat-lbl">Hide Ops</div>
+        </div>
+        <div class="log-stat-card">
+          <div class="log-stat-icon"><i class="fa-solid fa-unlock"></i></div>
+          <div class="log-stat-val" id="stat-extract">—</div>
+          <div class="log-stat-lbl">Extract Ops</div>
+        </div>
+        <div class="log-stat-card">
+          <div class="log-stat-icon"><i class="fa-solid fa-database"></i></div>
+          <div class="log-stat-val" id="stat-bytes">—</div>
+          <div class="log-stat-lbl">Bytes Hidden</div>
+        </div>
+        <div class="log-stat-card" style="cursor:pointer;" id="refresh-stats-btn">
+          <div class="log-stat-icon"><i class="fa-solid fa-rotate"></i></div>
+          <div class="log-stat-val" style="font-size:1.2rem;">Sync</div>
+          <div class="log-stat-lbl">Refresh</div>
+        </div>
+      </div>
+
+      <!-- ── Backend Activity Feed ── -->
+      <div class="logs-block">
+        <div class="logs-block-header">
+          <span><i class="fa-solid fa-satellite-dish"></i> Backend Activity</span>
+          <span class="logs-live-dot"></span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="history-table" id="stats-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Media</th>
+                <th>Algorithm</th>
+                <th>Payload</th>
+              </tr>
+            </thead>
+            <tbody id="stats-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Local Audit Logs ── -->
+      <div class="logs-block" style="margin-top: 2rem;">
+        <div class="logs-block-header">
+          <span><i class="fa-solid fa-shield-halved"></i> Local Audit Trail</span>
+          <button class="log-clear-btn" id="clear-history-btn"><i class="fa-solid fa-trash"></i> Clear</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Date &amp; Time</th>
+                <th>Operation</th>
+                <th>Mode</th>
+                <th>Payload Size</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+  <div id="toast-container"
+    style="position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:8px;"></div>
+  <script src="app.js?v=15"></script>
+</body>
+
+</html>

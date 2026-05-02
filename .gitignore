@@ -1,0 +1,12 @@
+# Environments
+env/
+env1/
+venv/
+.env
+Stegano/env1/
+Stegano/env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
