@@ -89,20 +89,6 @@
    ```
    > The application will automatically start both the Flask backend and the frontend server, and open your browser to `http://localhost:8000`.
 
----
-
-## 🌍 نظرة عامة (Arabic Overview)
-
-**StegoCrypt AI** هو تطبيق أمن سيبراني متقدم يجمع بين التشفير، وإخفاء البيانات (Steganography)، وتحليل البيانات المخفية باستخدام الذكاء الاصطناعي (Steganalysis). تم بناء هذا المشروع ليكون أداة احترافية تضمن سرية البيانات المخبأة من جهة، وتوفر تقنيات متطورة للكشف عن البيانات المخبأة في الصور باستخدام نموذج ذكاء اصطناعي يعتمد على شبكة ResNet-18.
-
-### الميزات الأساسية:
-- **تشفير قوي**: يتم تشفير جميع البيانات باستخدام AES-256-GCM قبل إخفائها.
-- **خوارزميات إخفاء متعددة**: يدعم LSB, DCT, SVD للصور، بالإضافة إلى إخفاء الملفات والصوتيات.
-- **كشف عبر الذكاء الاصطناعي**: يحتوي على نموذج ResNet-18 مدرب بدقة عالية لاكتشاف التعديلات الطفيفة في الصور.
-- **واجهة مستخدم عصرية**: تصميم تفاعلي وسهل الاستخدام (Glassmorphism).
-
----
-
 ## ⚠️ Important Notes
 * **Model Size**: Ensure you have the `steg_model.pth` (approx. 45MB) inside the `backend/` directory for the AI Steganalysis to work correctly.
 * **PyTorch Environment**: If you encounter a "Model not loaded" error, verify that your virtual environment is active and PyTorch is installed successfully.
