@@ -58,7 +58,7 @@ class DCTPlugin(SteganographyPlugin):
                     # Embed bit in a mid-frequency coefficient (e.g., (4,4))
                     coeff = dct_block[4, 4]
                     # Iterative Robust Embedding
-                    q = 100 # High quantization for robustness
+                    q = 200 # Extremely high quantization for stability
                     target_bit = int(payload_bits[bit_idx])
                     
                     # We'll try to find the best coefficient value that survives uint8 rounding
@@ -71,7 +71,7 @@ class DCTPlugin(SteganographyPlugin):
                     best_coeff = quantized * q
                     
                     # Inner loop to ensure the bit survives the float32 -> uint8 -> float32 trip
-                    max_attempts = 5
+                    max_attempts = 15
                     for attempt in range(max_attempts):
                         dct_block[4, 4] = best_coeff
                         # IDCT -> Clip -> Round -> Uint8
@@ -93,7 +93,7 @@ class DCTPlugin(SteganographyPlugin):
                         else:
                             # Adjust best_coeff to be even more "inside" the quantization bin
                             diff = (quantized * q) - test_val
-                            best_coeff += diff * 1.2
+                            best_coeff += diff * 1.5
                     
                     bit_idx += 1
                 if bit_idx >= len(payload_bits): break
@@ -112,7 +112,7 @@ class DCTPlugin(SteganographyPlugin):
         # We don't know the length yet, but we'll extract everything and then parse header
         # To be safe, we extract until capacity
         max_bits = (h // 8) * (w // 8) * channels
-        q = 100
+        q = 200
         
         for c in range(channels):
             for i in range(0, h - 7, 8):

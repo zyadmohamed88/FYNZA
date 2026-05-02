@@ -77,26 +77,50 @@ class SimpleDWT(SteganographyPlugin):
             LL, LH, HL, HH = self.haar_2d(channel_data)
 
             flat = HH.flatten()
+            target_HH_flat = flat.copy()
+            
+            # 1. Quantize all needed bits
+            for i in range(len(bits)):
+                q = 100.0
+                val_q = flat[i] / q
+                quantized = int(round(val_q))
 
-            for i in range(len(flat)):
-                if bit_idx >= len(bits):
-                    break
-                
-                val = int(round(flat[i]))
-
-                # LSB embedding
-                if (val % 2) != int(bits[bit_idx]):
-                    if val % 2 == 0:
-                        val += 1
+                if (quantized % 2) != int(bits[i]):
+                    if val_q > quantized:
+                        quantized += 1
                     else:
-                        val -= 1
+                        quantized -= 1
 
-                flat[i] = val
+                target_HH_flat[i] = quantized * q
                 bit_idx += 1
 
-            HH = flat.reshape(HH.shape)
-
-            channel_stego = self.ihaar_2d(LL, LH, HL, HH)
+            target_HH = target_HH_flat.reshape(HH.shape)
+            best_HH = target_HH.copy()
+            
+            # 2. Iterative correction loop to combat uint8 clipping
+            max_attempts = 15
+            for attempt in range(max_attempts):
+                channel_stego = self.ihaar_2d(LL, LH, HL, best_HH)
+                channel_stego_uint8 = np.clip(np.round(channel_stego), 0, 255).astype(np.uint8)
+                
+                _, _, _, test_HH = self.haar_2d(channel_stego_uint8)
+                test_HH_flat = test_HH.flatten()
+                best_HH_flat = best_HH.flatten()
+                
+                fails = 0
+                for i in range(len(bits)):
+                    test_val = test_HH_flat[i]
+                    test_bit = int(round(test_val / q)) % 2
+                    if test_bit != int(bits[i]):
+                        fails += 1
+                        diff = target_HH_flat[i] - test_val
+                        best_HH_flat[i] += diff * 1.5
+                        
+                best_HH = best_HH_flat.reshape(HH.shape)
+                
+                if fails == 0:
+                    channel_stego = channel_stego_uint8.astype(np.float32)
+                    break
             
             if channels == 1:
                 stego[:, :] = channel_stego
@@ -133,7 +157,8 @@ class SimpleDWT(SteganographyPlugin):
             flat = HH.flatten()
 
             for val in flat:
-                bits.append(str(int(round(val)) % 2))
+                q = 100.0
+                bits.append(str(int(round(val / q)) % 2))
 
         bits = "".join(bits)
 

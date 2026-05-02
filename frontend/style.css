@@ -88,10 +88,10 @@ body {
     transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-main); }
-::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-main); border-left: 1px solid var(--border-color); }
+::-webkit-scrollbar-thumb { background: var(--accent-dark); border-radius: 5px; border: 2px solid var(--bg-main); box-shadow: 0 0 5px var(--accent-glow); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-color); box-shadow: 0 0 10px var(--accent-glow); }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
@@ -194,14 +194,14 @@ h1, h2, h3, h4, h5, h6 {
     display: flex; justify-content: center; gap: 1rem; margin-bottom: 40px;
 }
 .tab-btn {
-    background-color: transparent; border: 1px solid var(--border-color); color: var(--text-main);
+    background-color: rgba(0, 255, 204, 0.05); border: 1px solid var(--accent-color); color: var(--accent-color);
     padding: 0.8rem 1.5rem; border-radius: var(--radius-sm); font-family: var(--font-heading);
     font-weight: 500; font-size: 1rem; cursor: pointer; transition: all var(--transition-normal);
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 10px var(--accent-glow) inset;
 }
-.tab-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+.tab-btn:hover { background-color: rgba(0, 255, 204, 0.2); box-shadow: 0 0 15px var(--accent-glow); }
 .tab-btn.active {
-    background-color: var(--accent-color); color: #000; box-shadow: 0 0 15px var(--accent-glow); border-color: var(--accent-color);
+    background-color: var(--accent-color); color: #000; box-shadow: 0 0 20px var(--accent-glow); border-color: var(--accent-color);
 }
 
 .panel {
@@ -312,11 +312,12 @@ select.field-input:hover, select.field-input:focus {
 
 /* ── Secondary Buttons ───────────────────────────────── */
 .export-btn, .copy-btn, .theme-btn {
-    background-color: transparent; border: 1px solid var(--border-color); color: var(--text-main);
+    background-color: rgba(0, 255, 204, 0.05); border: 1px solid var(--accent-color); color: var(--accent-color);
     padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.9rem;
     cursor: pointer; transition: all var(--transition-fast); display: inline-flex; align-items: center; gap: 0.5rem;
+    box-shadow: 0 0 10px var(--accent-glow) inset;
 }
-.export-btn:hover, .copy-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+.export-btn:hover, .copy-btn:hover, .theme-btn:hover { background-color: var(--accent-color); color: #000; box-shadow: 0 0 15px var(--accent-glow); }
 .theme-toggle { background: none; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; }
 .theme-toggle:hover { color: var(--accent-color); }
 
@@ -360,17 +361,12 @@ select.field-input:hover, select.field-input:focus {
 .delete-btn:hover { color: #fca5a5; text-shadow: 0 0 8px var(--error); }
 
 /* UI Fixes */
-/* UI Fixes */
 select.field-input option {
-    background-color: #0a0e17; /* Hardcoded for OS native dropdowns which ignore CSS variables */
-    color: #00ffcc;
-    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main); 
+    color: var(--accent-color);
+    font-family: var(--font-main);
     font-size: 0.95rem;
     font-weight: 600;
-}
-[data-theme="light"] select.field-input option {
-    background-color: #f9fafb;
-    color: #00b38f;
 }
 .hero-title {
     line-height: 1.1;

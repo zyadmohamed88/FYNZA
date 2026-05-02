@@ -60,7 +60,7 @@ class SVDPlugin(SteganographyPlugin):
                     u, s, vh = np.linalg.svd(block)
                     
                     # Iterative Robust Embedding
-                    Q = 100.0
+                    Q = 200.0
                     target_bit = int(payload_bits[bit_idx])
                     
                     val = s[0]
@@ -72,7 +72,7 @@ class SVDPlugin(SteganographyPlugin):
                     best_s0 = q_val * Q
                     
                     # Inner loop for rounding protection
-                    max_attempts = 5
+                    max_attempts = 15
                     for attempt in range(max_attempts):
                         s[0] = best_s0
                         s_mat = np.zeros((8, 8))
@@ -95,7 +95,7 @@ class SVDPlugin(SteganographyPlugin):
                         else:
                             # Adjust
                             diff = (q_val * Q) - test_val
-                            best_s0 += diff * 1.2
+                            best_s0 += diff * 1.5
                     
                     bit_idx += 1
                 if bit_idx >= len(payload_bits): break
@@ -112,7 +112,7 @@ class SVDPlugin(SteganographyPlugin):
         bits = []
         
         max_bits = (h // 8) * (w // 8) * channels
-        Q = 100.0
+        Q = 200.0
 
         for c in range(channels):
             for i in range(0, h - 7, 8):

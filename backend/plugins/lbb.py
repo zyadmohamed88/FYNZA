@@ -51,6 +51,14 @@ class LBBPlugin(SteganographyPlugin):
                         
                     center = block[1, 1]
                     
+                    # Prevent edge cases where center is 0 or 255
+                    if center == 0:
+                        center = 1
+                        block[1, 1] = 1
+                    elif center == 255:
+                        center = 254
+                        block[1, 1] = 254
+                    
                     # Embed 8 bits in the neighbors
                     for x in range(3):
                         for y in range(3):
@@ -93,6 +101,10 @@ class LBBPlugin(SteganographyPlugin):
                         block = stego[i:i+3, j:j+3, c]
                         
                     center = block[1, 1]
+                    
+                    # Prevent edge cases
+                    if center == 0: center = 1
+                    elif center == 255: center = 254
                     
                     for x in range(3):
                         for y in range(3):
