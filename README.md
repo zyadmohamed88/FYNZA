@@ -99,6 +99,7 @@ Unlike standard implementations that suffer from bit-flipping in lossy transform
 
 ## 🤝 The FYNZA Team
 This project was designed and developed with passion by:
+* **Zyad Elsheshtawy**
 * **Abdallah Elbedawee**
 * **Ahmed Elshiekh**
 * **Ahmed Omran**
