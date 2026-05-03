@@ -49,8 +49,8 @@
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/StegoCrypt-AI.git
-   cd StegoCrypt-AI
+   git clone https://github.com/zyadmohamed88/FYNZA.git
+   cd FYNZA
    ```
 
 2. **Create a Virtual Environment**
@@ -89,9 +89,21 @@
    ```
    > The application will automatically start both the Flask backend and the frontend server, and open your browser to `http://localhost:8000`.
 
-## ⚠️ Important Notes
-* **Model Size**: Ensure you have the `steg_model.pth` (approx. 45MB) inside the `backend/` directory for the AI Steganalysis to work correctly.
-* **PyTorch Environment**: If you encounter a "Model not loaded" error, verify that your virtual environment is active and PyTorch is installed successfully.
+---
+
+## 💎 Robustness & Stability (2024 Upgrade)
+Unlike standard implementations that suffer from bit-flipping in lossy transformations, this version features:
+* **Iterative QIM (Quantization Index Modulation)**: Applied to DCT, DWT, and SVD to ensure bits survive `uint8` rounding and clipping.
+* **Auto-Correction Loop**: The algorithm verifies bit survival during embedding and adjusts frequency coefficients until 100% stability is achieved.
+* **LBB Boundary Fix**: Resolved edge-case failures for black/white pixels in Local Binary Block embedding.
+
+## 🤝 The FYNZA Team
+This project was designed and developed with passion by:
+* **Abdallah Elbedawee**
+* **Ahmed Elshiekh**
+* **Ahmed Omran**
+* **Ali Elqlashy**
+* **Zyad Ammar** (Lead Maintainer)
 
 ---
 *Built for the future of digital forensics and secure communications.*
