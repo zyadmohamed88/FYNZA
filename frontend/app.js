@@ -192,7 +192,7 @@ $("hide-btn").addEventListener("click",async()=>{
     const res=await fetch(`${API}/hide`,{method:"POST",body:fd});
     const d=await res.json();
     if(!d.success)throw new Error(d.error||"Server error");
-    currentReport=d.report;
+    currentReport=d; // Store full response for PDF reporter
     const st=d.stats||{};
     const sec=d.security||{};
     const cap=d.capacity||1;
@@ -275,6 +275,8 @@ async function exportReport(fmt2){
 $("export-json-btn").addEventListener("click",()=>exportReport("json"));
 $("export-csv-btn").addEventListener("click",()=>exportReport("csv"));
 $("export-html-btn").addEventListener("click",()=>exportReport("html"));
+$("export-pdf-btn").addEventListener("click",()=>exportReport("pdf"));
+$("hm-export-pdf-btn")?.addEventListener("click",()=>exportReport("pdf"));
 
 // EXTRACT
 $("extract-btn").addEventListener("click",async()=>{

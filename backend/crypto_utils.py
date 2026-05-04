@@ -12,7 +12,7 @@ def derive_key(password: str, kdf: str, iterations: int, salt: bytes = b"StegoCr
     """Derive a 32-byte (256-bit) key using the specified KDF."""
     # PyCryptodome's KDFs default to latin-1 if passed a string. We must force UTF-8.
     password_bytes = password.encode('utf-8')
-    "فففففففففففففففففففففففففففففففففففففففففففففففففففف"
+
     if kdf == "pbkdf2":
         return PBKDF2(password_bytes, salt, dkLen=32, count=iterations, hmac_hash_module=SHA256)
     elif kdf == "scrypt":

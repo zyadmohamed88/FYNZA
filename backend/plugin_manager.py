@@ -4,7 +4,7 @@ plugin_manager.py
 Provides a dynamic plugin architecture for steganography algorithms.
 Allows dropping new algorithms into the `plugins/` directory without altering core logic.
 """
-"zizo"
+
 
 import importlib
 import os

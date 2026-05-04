@@ -611,10 +611,24 @@ def export_report():
 h1{{color:#9f5fff;}} table{{border-collapse:collapse;width:100%;margin-top:20px;}}
 td{{padding:12px;border-bottom:1px solid #222;}} td:first-child{{color:#94a3b8;width:40%;}}</style>
 </head><body><h1>🔒 FYNZA Security Report</h1><table>{rows}</table></body></html>"""
-            mime, fname = "text/html", "fynza_report.html"
+            return send_file(io.BytesIO(content.encode()), mimetype="text/html", as_attachment=True, download_name="fynza_report.html")
+        elif fmt == "pdf":
+            from forensic_reporter import ForensicReporter
+            reporter = ForensicReporter(
+                stats=data.get("heatmap_stats", {}),
+                security=data.get("security", {}),
+                layers=data.get("heatmap_layers", {}),
+                carrier_info=data.get("report", {}).get("carrier", {})
+            )
+            pdf_bytes = reporter.generate()
+            return send_file(
+                io.BytesIO(pdf_bytes),
+                mimetype="application/pdf",
+                as_attachment=True,
+                download_name="fynza_forensic_report.pdf"
+            )
         else:
-            return bad("Unsupported format. Use json, csv, or html.")
-        return send_file(io.BytesIO(content.encode()), mimetype=mime, as_attachment=True, download_name=fname)
+            return bad("Unsupported format. Use json, csv, html, or pdf.")
     except Exception as e:
         return bad(f"Export failed: {e}", 500)
 
