@@ -104,7 +104,7 @@ This project was designed and developed with passion by:
 * **Ahmed Elshiekh**
 * **Ahmed Omran**
 * **Ali Elqlashy**
-* **Zyad Ammar** (Lead Maintainer)
+* **Zyad Ammar**
 
 ---
 *Built for the future of digital forensics and secure communications.*
