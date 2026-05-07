@@ -36,7 +36,7 @@ const fmt=(n,u="bytes")=>n<1024?`${n} ${u}`:n<1048576?`${(n/1024).toFixed(1)} KB
 const infoRow=(key,val,cls="")=>`<div class="info-row"><span class="info-key">${key}</span><span class="info-val ${cls}">${val}</span></div>`;
 
 // Tabs
-const PANELS=["hide","extract","detect","forensics","logs"];
+const PANELS=["hide","extract","detect","forensics","performance","logs"];
 function switchTab(tab){PANELS.forEach(p=>{$(`${p}-panel`).hidden=p!==tab;[$(`tab-${p}-btn`),$(`nav-${p}-btn`)].forEach(b=>b&&b.classList.toggle("active",p===tab));});if(tab==="logs"){loadStats();renderHistory();}}
 PANELS.forEach(p=>{[$(`tab-${p}-btn`),$(`nav-${p}-btn`)].forEach(b=>b&&b.addEventListener("click",()=>switchTab(p)));});
 $("goto-detect-btn")?.addEventListener("click",()=>switchTab("detect"));
@@ -88,7 +88,7 @@ let hideFile=null,extractFile=null,detectFile=null,secretFile=null,payloadType="
 // Dropzones
 mkDrop("hide-dropzone","hide-file-input","hide-drop-idle","hide-preview","hide-toolbar","hide-filename",
   f=>{hideFile=f;clearAlert($("hide-alert"));showCarrierInfo(f);},
-  ()=>{hideFile=null;$("carrier-info").style.display="none";$("cap-warning").style.display="none";$("hide-result").hidden=true;$("hide-placeholder").hidden=false;}
+  ()=>{hideFile=null;$("carrier-info").style.display="none";$("cap-warning").style.display="none";$("hide-result").hidden=true;$("hide-placeholder").hidden=false;$("perf-content").style.display="none";$("perf-placeholder").style.display="block";}
 );
 mkDrop("extract-dropzone","extract-file-input","extract-drop-idle","extract-preview","extract-toolbar","extract-filename",
   f=>{extractFile=f;clearAlert($("extract-alert"));},
@@ -208,6 +208,29 @@ $("hide-btn").addEventListener("click",async()=>{
     $("capacity-bar").style.width=`${capPct}%`;
     $("hide-psnr-label").textContent=sec.psnr?`PSNR: ${sec.psnr} dB`:"";
 
+    // Imperceptibility Metrics
+    $("metric-mse").textContent=sec.mse!=null?sec.mse.toFixed(5):"—";
+    $("metric-mse").className="metric-val "+(sec.mse<0.01?"good":sec.mse<1?"warn":"bad");
+    $("metric-psnr").textContent=sec.psnr!=null?`${sec.psnr.toFixed(5)} dB`:"—";
+    $("metric-psnr").className="metric-val "+(sec.psnr>50?"good":sec.psnr>35?"warn":"bad");
+    $("metric-if").textContent=sec.image_fidelity!=null?sec.image_fidelity.toFixed(5):"—";
+    $("metric-if").className="metric-val "+(sec.image_fidelity>0.999?"good":sec.image_fidelity>0.99?"warn":"bad");
+
+    // Robustness Metrics
+    $("metric-crc").textContent=sec.correlation!=null?sec.correlation.toFixed(5):"—";
+    $("metric-crc").className="metric-val "+(sec.correlation>0.999?"good":sec.correlation>0.99?"warn":"bad");
+    $("metric-sim").textContent=sec.similarity!=null?sec.similarity.toFixed(5):"—";
+    $("metric-sim").className="metric-val "+(sec.similarity>0.999?"good":sec.similarity>0.99?"warn":"bad");
+    $("metric-ber").textContent=sec.ber!=null?`${sec.ber.toFixed(5)}%`:"—";
+    $("metric-ber").className="metric-val "+(sec.ber<1?"good":sec.ber<5?"warn":"bad");
+    $("metric-ar").textContent=sec.accuracy!=null?`${sec.accuracy.toFixed(5)}%`:"—";
+    $("metric-ar").className="metric-val "+(sec.accuracy>99?"good":sec.accuracy>90?"warn":"bad");
+
+    // Update Performance Tab
+    $("perf-placeholder").style.display = "none";
+    $("perf-content").style.display = "block";
+    // (Actual metric IDs remain same, they were moved in index.html)
+
     renderStatBoxes(st);
     renderMeta("result-meta-rows",[
       ["<i class='fa-solid fa-film'></i> Carrier",d.report?.carrier?.filename||hideFile.name],
@@ -220,7 +243,7 @@ $("hide-btn").addEventListener("click",async()=>{
     ]);
 
     if(d.media_type==="image"){
-      $("image-previews-wrap").style.display="grid";
+      $("image-previews-wrap").style.display="block";
       $("audio-result-wrap").style.display="none";
       $("generic-result-wrap").style.display="none";
       const stegoSrc="data:image/png;base64,"+d.stego_image;

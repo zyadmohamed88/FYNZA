@@ -611,7 +611,7 @@ def export_report():
 h1{{color:#9f5fff;}} table{{border-collapse:collapse;width:100%;margin-top:20px;}}
 td{{padding:12px;border-bottom:1px solid #222;}} td:first-child{{color:#94a3b8;width:40%;}}</style>
 </head><body><h1>🔒 FYNZA Security Report</h1><table>{rows}</table></body></html>"""
-            return send_file(io.BytesIO(content.encode()), mimetype="text/html", as_attachment=True, download_name="fynza_report.html")
+            content, mime, fname = content, "text/html", "fynza_report.html"
         elif fmt == "pdf":
             from forensic_reporter import ForensicReporter
             reporter = ForensicReporter(
@@ -629,6 +629,7 @@ td{{padding:12px;border-bottom:1px solid #222;}} td:first-child{{color:#94a3b8;w
             )
         else:
             return bad("Unsupported format. Use json, csv, html, or pdf.")
+        return send_file(io.BytesIO(content.encode()), mimetype=mime, as_attachment=True, download_name=fname)
     except Exception as e:
         return bad(f"Export failed: {e}", 500)
 

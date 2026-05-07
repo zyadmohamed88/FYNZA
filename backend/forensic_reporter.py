@@ -81,13 +81,51 @@ class ForensicReporter:
         self.pdf.set_text_color(51, 65, 85)
         self.pdf.set_font("Helvetica", "", 10)
         metrics = [
-            ["PSNR (Visual Distortion):", f"{self.security.get('psnr', 0)} dB"],
             ["Statistical Stealth:", f"{self.security.get('statistical_stealth', 0)}/100"],
             ["Visual Integrity:", f"{self.security.get('visual_quality', 0)}/100"]
         ]
         for label, val in metrics:
             self.pdf.set_font("Helvetica", "B", 10)
             self.pdf.cell(50, 7, label)
+            self.pdf.set_font("Helvetica", "", 10)
+            self.pdf.cell(0, 7, str(val), ln=True)
+        self.pdf.ln(5)
+
+        # ── Imperceptibility Analysis ──
+        self.pdf.set_fill_color(240, 245, 255)
+        self.pdf.set_font("Helvetica", "B", 11)
+        self.pdf.set_text_color(30, 58, 138)
+        self.pdf.cell(0, 9, "  2.1 Imperceptibility Analysis", ln=True, fill=True)
+        self.pdf.set_text_color(51, 65, 85)
+        self.pdf.ln(2)
+        imp_metrics = [
+            ["MSE (Mean Square Error):", f"{self.security.get('mse', 'N/A')}"],
+            ["PSNR (Peak Signal-to-Noise Ratio):", f"{self.security.get('psnr', 'N/A')} dB"],
+            ["IF (Image Fidelity):", f"{self.security.get('image_fidelity', 'N/A')}"],
+        ]
+        for label, val in imp_metrics:
+            self.pdf.set_font("Helvetica", "B", 10)
+            self.pdf.cell(65, 7, label)
+            self.pdf.set_font("Helvetica", "", 10)
+            self.pdf.cell(0, 7, str(val), ln=True)
+        self.pdf.ln(3)
+
+        # ── Robustness Analysis ──
+        self.pdf.set_fill_color(240, 255, 245)
+        self.pdf.set_font("Helvetica", "B", 11)
+        self.pdf.set_text_color(22, 101, 52)
+        self.pdf.cell(0, 9, "  2.2 Robustness Analysis", ln=True, fill=True)
+        self.pdf.set_text_color(51, 65, 85)
+        self.pdf.ln(2)
+        rob_metrics = [
+            ["CRC (Correlation Coefficient):", f"{self.security.get('correlation', 'N/A')}"],
+            ["SIM (Similarity Measure):", f"{self.security.get('similarity', 'N/A')}"],
+            ["BER (Bit Error Rate):", f"{self.security.get('ber', 'N/A')}%"],
+            ["AR (Accuracy Ratio):", f"{self.security.get('accuracy', 'N/A')}%"],
+        ]
+        for label, val in rob_metrics:
+            self.pdf.set_font("Helvetica", "B", 10)
+            self.pdf.cell(65, 7, label)
             self.pdf.set_font("Helvetica", "", 10)
             self.pdf.cell(0, 7, str(val), ln=True)
         self.pdf.ln(5)

@@ -211,14 +211,64 @@ class SteganalysisEngine:
 
     @staticmethod
     def calculate_security_score(original: np.ndarray, stego: np.ndarray) -> dict:
-        """Calculate 0-100 security score using PSNR + LSB chi-square analysis."""
+        """Calculate 0-100 security score with full imperceptibility & robustness metrics."""
         orig3 = SteganalysisEngine._to_bgr(original)
         steg3 = SteganalysisEngine._to_bgr(stego)
 
-        mse  = np.mean((orig3.astype(np.float64) - steg3.astype(np.float64)) ** 2)
+        orig_f = orig3.astype(np.float64)
+        steg_f = steg3.astype(np.float64)
+        diff   = orig_f - steg_f
+
+        # ══════════════════════════════════════════════════════════════
+        # IMPERCEPTIBILITY ANALYSIS
+        # ══════════════════════════════════════════════════════════════
+
+        # 1. Mean Square Error (MSE)
+        mse = float(np.mean(diff ** 2))
+
+        # 2. Peak Signal to Noise Ratio (PSNR)
         psnr = 100.0 if mse == 0 else 10.0 * math.log10((255.0 ** 2) / mse)
 
-        stego_lsb = steg3.flatten() & 1
+        # 3. Image Fidelity (IF)
+        #    IF = 1 - [ Σ(orig - stego)² / Σ(orig²) ]
+        orig_energy = float(np.sum(orig_f ** 2))
+        image_fidelity = 1.0 - (float(np.sum(diff ** 2)) / orig_energy) if orig_energy > 0 else 1.0
+
+        # ══════════════════════════════════════════════════════════════
+        # ROBUSTNESS ANALYSIS
+        # ══════════════════════════════════════════════════════════════
+
+        # 4. Correlation Coefficient (CRC)
+        #    Pearson correlation between flattened original and stego
+        orig_flat = orig_f.flatten()
+        steg_flat = steg_f.flatten()
+        orig_mean = np.mean(orig_flat)
+        steg_mean = np.mean(steg_flat)
+        numerator   = float(np.sum((orig_flat - orig_mean) * (steg_flat - steg_mean)))
+        denominator = math.sqrt(
+            float(np.sum((orig_flat - orig_mean) ** 2)) *
+            float(np.sum((steg_flat - steg_mean) ** 2))
+        )
+        correlation = numerator / denominator if denominator > 0 else 1.0
+
+        # 5. Similarity Measure (SIM)
+        #    SIM = Σ(orig × stego) / Σ(orig²)
+        similarity = float(np.sum(orig_f * steg_f)) / orig_energy if orig_energy > 0 else 1.0
+
+        # 6. Bit Error Rate (BER)
+        #    Percentage of LSBs that differ between original and stego
+        orig_lsb  = (orig3 & 1).flatten()
+        stego_lsb = (steg3 & 1).flatten()
+        total_bits = len(orig_lsb)
+        error_bits = int(np.sum(orig_lsb != stego_lsb))
+        ber = (error_bits / total_bits) * 100.0 if total_bits > 0 else 0.0
+
+        # 7. Accuracy Ratio (AR)
+        #    Percentage of pixels that remained identical
+        pixel_match = np.all(orig3 == steg3, axis=2)
+        accuracy = (float(np.sum(pixel_match)) / (orig3.shape[0] * orig3.shape[1])) * 100.0
+
+        # ── Composite scoring (unchanged logic) ──────────────────────
         ones_ratio = np.mean(stego_lsb)
         divergence = abs(0.5 - ones_ratio)
         chi_score  = min(100, divergence * 1000)
@@ -227,8 +277,16 @@ class SteganalysisEngine:
 
         return {
             "score":               round(final, 1),
-            "psnr":                round(psnr, 2),
+            "risk_level":          "High" if final < 40 else "Medium" if final < 70 else "Low",
             "statistical_stealth": round(chi_score, 1),
             "visual_quality":      round(psnr_score, 1),
-            "risk_level":          "High" if final < 40 else "Medium" if final < 70 else "Low",
+            # ── Imperceptibility Metrics ──
+            "mse":                 round(mse, 5),
+            "psnr":                round(psnr, 5),
+            "image_fidelity":      round(image_fidelity, 5),
+            # ── Robustness Metrics ──
+            "correlation":         round(correlation, 5),
+            "similarity":          round(similarity, 5),
+            "ber":                 round(ber, 5),
+            "accuracy":            round(accuracy, 5),
         }

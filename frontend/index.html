@@ -8,8 +8,8 @@
   <meta name="description" content="Enterprise steganography: AES-256-GCM, ChaCha20, Scrypt, WAV & Image carriers." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=17" />
-  <link rel="stylesheet" href="features.css?v=17" />
+  <link rel="stylesheet" href="style.css?v=25" />
+  <link rel="stylesheet" href="features.css?v=25" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -55,6 +55,7 @@
       <button class="tab-btn" id="tab-extract-btn"><i class="fa-solid fa-unlock"></i> Extract Payload</button>
       <button class="tab-btn" id="tab-detect-btn"><i class="fa-solid fa-radar"></i> Detect</button>
       <button class="tab-btn" id="tab-forensics-btn" style="position:relative;"><i class="fa-solid fa-microscope"></i> Forensics<span class="hm-tab-badge" id="forensics-badge" hidden></span></button>
+      <button class="tab-btn" id="tab-performance-btn"><i class="fa-solid fa-gauge-high"></i> Performance</button>
       <button class="tab-btn" id="tab-logs-btn"><i class="fa-solid fa-terminal"></i> Logs &amp; Status</button>
     </div>
 
@@ -237,56 +238,65 @@
               <span class="result-psnr" id="hide-psnr-label"></span>
             </div>
 
-            <div class="gauge-section">
-              <div class="gauge-header">
-                <span class="gauge-title">Security Score</span>
-                <span class="gauge-value gradient-text" id="score-val"></span>
+            <!-- ═══ Section 1: Security Overview ═══ -->
+            <div class="dashboard-section">
+              <div class="dashboard-section-title"><i class="fa-solid fa-shield-halved"></i> Security Overview</div>
+              <div class="gauge-section">
+                <div class="gauge-header">
+                  <span class="gauge-title">Security Score</span>
+                  <span class="gauge-value gradient-text" id="score-val"></span>
+                </div>
+                <div class="gauge-bar-bg">
+                  <div class="gauge-bar" id="score-bar"></div>
+                </div>
+                <div class="gauge-sublabel">Risk Level: <strong id="risk-val"></strong></div>
               </div>
-              <div class="gauge-bar-bg">
-                <div class="gauge-bar" id="score-bar"></div>
+
+              <div class="gauge-section" style="margin-top:1.2rem;">
+                <div class="gauge-header">
+                  <span class="gauge-title">Carrier Capacity Used</span>
+                  <span class="gauge-value" id="capacity-pct-val"
+                    style="font-size:16px;color:var(--text-primary);font-family:var(--font-mono);"></span>
+                </div>
+                <div class="gauge-bar-bg">
+                  <div class="gauge-bar" id="capacity-bar" style="background:var(--accent-color);"></div>
+                </div>
               </div>
-              <div class="gauge-sublabel">Risk Level: <strong id="risk-val"></strong></div>
             </div>
 
-            <div class="gauge-section">
-              <div class="gauge-header">
-                <span class="gauge-title">Carrier Capacity Used</span>
-                <span class="gauge-value" id="capacity-pct-val"
-                  style="font-size:16px;color:var(--text-primary);font-family:var(--font-mono);"></span>
-              </div>
-              <div class="gauge-bar-bg">
-                <div class="gauge-bar" id="capacity-bar" style="background:var(--accent);"></div>
-              </div>
+            <!-- ═══ Section 2: Processing Stats ═══ -->
+            <div class="dashboard-section">
+              <div class="dashboard-section-title"><i class="fa-solid fa-chart-bar"></i> Processing Statistics</div>
+              <div class="stat-group" id="stat-group"></div>
             </div>
 
-            <div class="stat-group" id="stat-group"></div>
-
-            <div class="info-dashboard">
-              <h4>Operation Metadata</h4>
-              <div id="result-meta-rows"></div>
+            <!-- ═══ Section 5: Operation Metadata ═══ -->
+            <div class="dashboard-section">
+              <div class="dashboard-section-title"><i class="fa-solid fa-clipboard-list"></i> Operation Metadata</div>
+              <div class="info-dashboard" style="margin:0;">
+                <div id="result-meta-rows"></div>
+              </div>
             </div>
 
             <!-- Image output -->
-            <div id="image-previews-wrap" class="image-previews" style="display:none;">
-              <div>
-                <p class="preview-label">Stego Image</p>
-                <img class="result-preview" id="hide-result-img" alt="Stego" />
-                <div style="display:flex;gap:8px;margin-top:10px;">
-                  <a class="download-btn" id="hide-download-png" download="fynza_stego.png">Download PNG</a>
-                  <a class="download-btn" id="hide-download-jpg"
-                    style="background:rgba(6,182,212,0.08);color:var(--cyan);border-color:rgba(6,182,212,0.25);"
-                    download="fynza_stego.jpg">Download JPG</a>
+            <div id="image-previews-wrap" class="image-previews" style="display:none; text-align: center;">
+              <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                <p class="preview-label">Stego Image Result</p>
+                <img class="result-preview" id="hide-result-img" alt="Stego" style="margin: 0 auto;" />
+                
+                <div class="download-button-group" style="display:flex; gap:12px; margin-top:20px; justify-content:center;">
+                  <a class="tool-btn primary" id="hide-download-png" download="fynza_stego.png">
+                    <i class="fa-solid fa-download"></i> Download PNG
+                  </a>
+                  <a class="tool-btn heatmap" id="hide-download-jpg" download="fynza_stego.jpg">
+                    <i class="fa-solid fa-file-image"></i> Download JPG
+                  </a>
                 </div>
               </div>
-              <div>
-                <img class="result-preview heatmap" id="hide-heatmap-img" alt="Heatmap" />
+              <div style="margin-top: 2rem;">
+                <img class="result-preview heatmap" id="hide-heatmap-img" alt="Heatmap" style="margin: 0 auto;" />
               </div>
             </div>
-
-              <!-- shortcut to forensics tab -->
-              <div id="hm-shortcut" hidden style="margin-top:1.5rem;">
-                <button class="export-btn" id="hm-goto-btn" style="width:100%;justify-content:center;gap:0.6rem;"><i class="fa-solid fa-microscope"></i> Open Forensic Heatmap Analysis</button>
-              </div>
 
             <!-- Audio output -->
             <div id="audio-result-wrap" style="display:none;">
@@ -311,12 +321,22 @@
               </div>
             </div>
 
-            <!-- Export -->
-            <div class="export-bar">
-              <button class="export-btn" id="export-pdf-btn" style="background:var(--accent-color);color:#000;font-weight:700;"><i class="fa-solid fa-file-pdf"></i> Forensic PDF Report</button>
-              <button class="export-btn" id="export-json-btn">JSON</button>
-              <button class="export-btn" id="export-csv-btn">CSV</button>
-              <button class="export-btn" id="export-html-btn">HTML</button>
+            <!-- Consolidated Toolbox -->
+            <div class="forensic-toolbox">
+              <button class="tool-btn wide heatmap" id="hm-goto-btn">
+                <i class="fa-solid fa-microscope"></i> Open Forensic Heatmap Analysis
+              </button>
+              
+              <div class="tool-grid">
+                <button class="tool-btn primary pdf" id="export-pdf-btn">
+                  <i class="fa-solid fa-file-pdf"></i> Forensic PDF
+                </button>
+                <div class="tool-group">
+                  <button class="tool-btn small" id="export-json-btn">JSON</button>
+                  <button class="tool-btn small" id="export-csv-btn">CSV</button>
+                  <button class="tool-btn small" id="export-html-btn">HTML</button>
+                </div>
+              </div>
             </div>
 
             <div class="explain-box" id="explain-section" hidden>
@@ -670,6 +690,79 @@
       </div>
     </section>
 
+    <!-- PERFORMANCE PANEL -->
+    <section class="panel" id="performance-panel" hidden>
+      <div class="section-header">
+        <div class="section-icon"><i class="fa-solid fa-gauge-high"></i></div>
+        <h2 class="section-title">Performance Analysis</h2>
+        <p class="section-sub">Detailed imperceptibility and robustness metrics of the last operation.</p>
+      </div>
+
+      <div id="perf-placeholder" class="placeholder-card">
+        <div class="placeholder-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="placeholder-text">No Data Available</div>
+        <p class="placeholder-sub">Perform a 'Hide' operation first to see performance metrics.</p>
+      </div>
+
+      <div id="perf-content" style="display:none;">
+        <!-- ═══ Imperceptibility Analysis ═══ -->
+        <div class="dashboard-section">
+          <div class="dashboard-section-title"><i class="fa-solid fa-eye-slash"></i> Imperceptibility Analysis</div>
+          <div class="metrics-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px;">
+            <div class="metric-card">
+              <div class="metric-icon"><i class="fa-solid fa-calculator"></i></div>
+              <div class="metric-val" id="metric-mse">—</div>
+              <div class="metric-lbl">MSE</div>
+              <div class="metric-sub">Mean Square Error</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon"><i class="fa-solid fa-signal"></i></div>
+              <div class="metric-val" id="metric-psnr">—</div>
+              <div class="metric-lbl">PSNR</div>
+              <div class="metric-sub">Peak Signal-to-Noise Ratio (dB)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon"><i class="fa-solid fa-image"></i></div>
+              <div class="metric-val" id="metric-if">—</div>
+              <div class="metric-lbl">IF</div>
+              <div class="metric-sub">Image Fidelity</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ Robustness Analysis ═══ -->
+        <div class="dashboard-section">
+          <div class="dashboard-section-title"><i class="fa-solid fa-shield-virus"></i> Robustness Analysis</div>
+          <div class="metrics-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px;">
+            <div class="metric-card">
+              <div class="metric-icon"><i class="fa-solid fa-link"></i></div>
+              <div class="metric-val" id="metric-crc">—</div>
+              <div class="metric-lbl">CRC</div>
+              <div class="metric-sub">Correlation Coefficient</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon"><i class="fa-solid fa-equals"></i></div>
+              <div class="metric-val" id="metric-sim">—</div>
+              <div class="metric-lbl">SIM</div>
+              <div class="metric-sub">Similarity Measure</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon"><i class="fa-solid fa-bug"></i></div>
+              <div class="metric-val" id="metric-ber">—</div>
+              <div class="metric-lbl">BER</div>
+              <div class="metric-sub">Bit Error Rate (%)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon"><i class="fa-solid fa-bullseye"></i></div>
+              <div class="metric-val" id="metric-ar">—</div>
+              <div class="metric-lbl">AR</div>
+              <div class="metric-sub">Accuracy Ratio (%)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ═══════ LOGS &amp; STATUS (Unified) ═══════ -->
     <section class="panel" id="logs-panel" hidden>
 
@@ -756,7 +849,7 @@
   </main>
   <div id="toast-container"
     style="position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:8px;"></div>
-  <script src="app.js?v=17"></script>
+  <script src="app.js?v=25"></script>
 </body>
 
 </html>
